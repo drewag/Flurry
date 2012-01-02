@@ -15,6 +15,14 @@ NamedConcreteSelector::NamedConcreteSelector()
     delete this;
 }
 
+/* virtual */ bool NamedConcreteSelector::doesSupportCategory
+    (
+    const Category &cat
+    ) const
+{
+    return true;
+}
+
 /* virtual */ bool NamedConcreteSelector::doesObjectMatch
     (
     std::string text,

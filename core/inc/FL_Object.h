@@ -10,6 +10,7 @@ namespace Flurry
 
 class Category;
 class Selector;
+class Action;
 class ConcreteObject;
 
 class Object
@@ -17,6 +18,7 @@ class Object
     public:
         friend class Category;
         friend class Selector;
+        friend class Action;
 
         //! Constructor
         Object

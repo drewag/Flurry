@@ -1,4 +1,5 @@
-*.o
+**.o
 out/
-*.swp
+**.swp
 flurry
+**.DS_Store

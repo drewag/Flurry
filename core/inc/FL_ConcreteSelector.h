@@ -32,6 +32,12 @@ class ConcreteSelector : public ConcreteObject
             const Object &obj  //!< Object to check if it matches
             ) const = 0;
 
+        //! @return true if selector supports the given category
+        virtual bool doesSupportCategory
+            (
+            const Category &cat  //!< Object to check if it matches
+            ) const = 0;
+
 }; // class ConcreteSelector
 
 } // namespace Flurry

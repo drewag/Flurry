@@ -15,9 +15,6 @@ class ActionManager : public ObjectManager
         //! Destructor
         ~ActionManager();
 
-        //! @returns an instance of an Action Category
-        static Category actionCategory();
-
     protected:
         //! Get the category that this Manager is managing objects for
         virtual Category getCategory() const;

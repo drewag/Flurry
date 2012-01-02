@@ -6,6 +6,7 @@
 #include "FL_ObjectList.h"
 #include "FL_Category.h"
 #include "FL_Selector.h"
+#include "FL_Action.h"
 #include "FL_NamedConcreteSelector.h"
 
 namespace Flurry
@@ -19,7 +20,7 @@ CoreModule::CoreModule()
     // Setup Categories
     mCategoryList = new ObjectList();
     mCategoryList->add( Category::categoryCategory() );
-    mCategoryList->add( ActionManager::actionCategory() );
+    mCategoryList->add( Action::actionCategory() );
     mCategoryList->add( Selector::selectorCategory() );
 
     // Setup Actions

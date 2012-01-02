@@ -7,6 +7,7 @@ namespace Flurry
 {
 
 class ConcreteSelector;
+class Category;
 
 class Selector : public Object
 {
@@ -31,6 +32,12 @@ class Selector : public Object
             (
             std::string text,  //!< text to match with
             const Object &obj  //!< Object to check if it matches
+            ) const;
+
+        //! @return true if selector supports the given category
+        virtual bool doesSupportCategory
+            (
+            const Category &cat  //!< Object to check if it matches
             ) const;
 
         //! @returns The Selector Category

@@ -38,22 +38,11 @@ class ModuleManager
             std::string name //!< name of the module to register
             );
 
-        //! @returns a list of objects that match the given text
-        ObjectList findObject
-            (
-            std::string text,   //!< Text to search with
-            Selector &sel       //!< Selector to filter objects with
-            );
+        //! @return a list of all loaded categories
+        const ObjectList getAllCategories();
 
-        //! Search for selectors that support
-        //! the given category
-        //!
-        //! @returns list of selectors
-        const ObjectList findSelector
-            (
-            const Category &cat, //!< Category to make sure is supported
-            std::string text     //!< Text to match agains the name of the selector
-            );
+        //! @return a list of all loaded selectors
+        const ObjectList getAllSelectors();
 
         //! Unregister a module
         //!
@@ -64,6 +53,12 @@ class ModuleManager
             );
 
     private:
+        //! Disable copy constructor
+        ModuleManager
+            (
+            const ModuleManager& other
+            );
+
         //! Load the given module
         bool loadModule
             (

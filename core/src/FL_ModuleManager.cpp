@@ -110,22 +110,14 @@ bool ModuleManager::unregisterModule
     return true;
 }
 
-ObjectList ModuleManager::findObject
-    (
-    std::string text,
-    Selector &sel
-    )
+const ObjectList ModuleManager::getAllCategories()
 {
-    return mCategoryManager->findObject( text, sel );
+    return mCategoryManager->getAllObjects();
 }
 
-const ObjectList ModuleManager::findSelector
-    (
-    const Category &cat,
-    std::string text
-    )
+const ObjectList ModuleManager::getAllSelectors()
 {
-    return mSelectorManager->findSelector( cat, text );
+    return mSelectorManager->getAllObjects();
 }
 
 //-----------------------------------------------------------

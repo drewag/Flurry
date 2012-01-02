@@ -7,6 +7,7 @@ namespace Flurry
 {
 
 class Object;
+class Category;
 
 class ObjectList
 {
@@ -49,6 +50,12 @@ class ObjectList
         void remove
             (
             const ObjectList &list //!< list of objects to remove
+            );
+
+        //! @returns true if all objects are of the given category
+        bool allObjectsAreOfCategory
+            (
+            const Category& cat //!< Category to check for
             );
 
         //! @returns the number of Objects in list

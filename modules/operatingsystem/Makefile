@@ -12,7 +12,7 @@ AFTER_LINKER_FLAGS :=
 #AFTER_LINKER_FLAGS := -Wl,-no-whole-archive
 
 INCLUDE := -I./inc -I../../core/inc
-LIBRARIES := ../../core/flurry_core.a
+LIBRARIES := ../../core/flurry_core.a ../../core/packages/boost/libs/thread/thread.a ../../core/packages/boost/libs/signals/signals.a
 
 SRC_DIR := src
 SOURCES := $(shell find $(SRC_DIR) -type f -name '*.cpp' | tr '\n' ' ' )

@@ -31,6 +31,7 @@ ConcreteObject::ConcreteObject
 
 ConcreteObject::~ConcreteObject()
 {
+    std::cout << "Destroying " << mTitle << std::endl;
     delete mCategories;
 }
 

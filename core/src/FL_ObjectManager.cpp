@@ -58,4 +58,19 @@ bool ObjectManager::unloadModule
     return true;
 }
 
+ObjectList ObjectManager::getAllObjects()
+{
+    ObjectList ret;
+
+    ObjectMap::iterator itr;
+    itr = mObjectMap->begin();
+    while( mObjectMap->end() != itr )
+    {   
+        ret.add( itr->second );
+        itr++;
+    }
+
+    return ret;
+}
+
 } // namespace Fluffy

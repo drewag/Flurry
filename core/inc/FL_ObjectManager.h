@@ -24,6 +24,9 @@ class ObjectManager
             (
             Module &mod //!< Module to unload
             );
+
+        //! @returns list of all objects managed by this manager
+        ObjectList getAllObjects();
         
     protected:
         //! Constructor
@@ -42,9 +45,6 @@ class ObjectManager
             ) = 0;
 
     protected:
-        //! Load initial objects for this manager
-        void load();
-
         //! A Map of lists of objects
         typedef std::map<std::string,ObjectList> ObjectMap;
 

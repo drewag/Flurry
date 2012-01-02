@@ -49,4 +49,12 @@ Selector::~Selector()
     return ((ConcreteSelector*)mConcrete)->doesObjectMatch( text, obj );
 }
 
+/* virtual */ bool Selector::doesSupportCategory
+    (
+    const Category &cat
+    ) const
+{
+    return ((ConcreteSelector*)mConcrete)->doesSupportCategory( cat );
+}
+
 } // namespace Flurry

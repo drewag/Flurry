@@ -62,6 +62,24 @@ void ObjectList::remove
     }
 }
 
+bool ObjectList::allObjectsAreOfCategory
+    (
+    const Category& cat
+    )
+{
+    ObjectList::const_iterator itr;
+    itr = mObjects->begin();
+    while( mObjects->end() != itr )
+    {
+        if( !itr->isOfCategory( cat ) )
+        {
+            return false;
+        }
+        itr++;
+    }
+    return true;
+}
+
 ObjectList::iterator ObjectList::begin()
 {
     return mObjects->begin();

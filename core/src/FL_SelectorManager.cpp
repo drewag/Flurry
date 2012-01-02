@@ -21,26 +21,6 @@ SelectorManager::~SelectorManager()
     return Selector::selectorCategory();
 }
 
-const ObjectList SelectorManager::findSelector
-    (
-    const Category &cat,
-    std::string text
-    )
-{
-    ObjectList ret;
-
-    ObjectMap::const_iterator mapItr;
-    mapItr = mObjectMap->begin();
-    while( mObjectMap->end() != mapItr )
-    {
-        const ObjectList* list = &mapItr->second;
-        ret.add( *list );
-        mapItr++;
-    }
-
-    return ret;
-} 
-
 /* virtual */ const ObjectList &SelectorManager::loadObjectsFromMod
     (
     Module &mod

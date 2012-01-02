@@ -5,9 +5,9 @@ CC := g++
 CFLAGS := -c -Wall -g -fPIC
 LDFLAGS := -ldl
 
-INCLUDE := -I./inc -I./core/inc
+INCLUDE := -I./inc -I./core/inc -I./core/packages/boost
 SRC_DIR := src
-LIBRARIES := core/flurry_core.a
+LIBRARIES := core/flurry_core.a core/packages/boost/libs/thread/thread.a
 SOURCES := $(shell find $(SRC_DIR) -type f -name '*.cpp' | tr '\n' ' ')
 OBJECTS := $(SOURCES:.cpp=.o)
 OUT_OBJECTS := $(subst $(SRC_DIR), $(BUILD_DIRECTORY), $(OBJECTS))

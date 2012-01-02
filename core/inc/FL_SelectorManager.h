@@ -18,16 +18,6 @@ class SelectorManager : public ObjectManager
         //! Destructor
         ~SelectorManager();
 
-        //! Search for selectors that support
-        //! the given category
-        //!
-        //! @returns list of selectors
-        const ObjectList findSelector
-            (
-            const Category &cat, //!< Category to make sure is supported
-            std::string text     //!< Text to match agains the name of the selector
-            );
-
     protected:
         //! Get the category that this Manager is managing objects for
         virtual Category getCategory() const;
