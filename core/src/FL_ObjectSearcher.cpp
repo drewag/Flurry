@@ -9,13 +9,11 @@ namespace Flurry
 
 ObjectSearcher::ObjectSearcher
     (
-    SigSearchDone::slot_type searchDoneSlot,
     const std::string &text,
     const Selector &sel,
     const ObjectList &categories
     )
-    : Searcher( searchDoneSlot )
-    , mSearchText( text )
+    : mSearchText( text )
     , mSelector( sel )
     , mCategories( categories )
 {

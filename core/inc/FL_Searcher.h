@@ -14,20 +14,24 @@ class Searcher
         //! Signal for when the search finishes
         typedef boost::signals2::signal<void
             (
-            const ObjectList results
+            const Searcher &searcher,   //!< Searcher that has finished
+            const ObjectList results    //!< Results found by searcher
             )> SigSearchDone;
 
     public:
         //! Constructor
-        Searcher
-            (
-            SigSearchDone::slot_type searchDoneSlot //!< slot to callback when the search is done
-            );
+        Searcher();
         
         //! Copy Constructor
         Searcher
             (
             const Searcher &other   //!< searcher to copy
+            );
+
+        //! Register for callback to be called when the search is done
+        boost::signals2::connection connectSearchDone
+            (
+            SigSearchDone::slot_type searchDoneSlot //!< slot to callback when the search is done
             );
 
         //! Destructor
@@ -42,10 +46,6 @@ class Searcher
             (
             const ObjectList results
             );
-
-    private:
-        //! Disabled empty constructor
-        Searcher();
 
     private:
         SigSearchDone* mSearchDoneSignal; //!< Signal for when search is complete

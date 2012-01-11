@@ -6,14 +6,9 @@
 namespace Flurry
 {
 
-Searcher::Searcher
-    (
-    SigSearchDone::slot_type searchDoneSlot
-    )
-    : mSearchDoneSignal( NULL )
+Searcher::Searcher()
 {
     mSearchDoneSignal = new SigSearchDone();
-    mSearchDoneSignal->connect( searchDoneSlot );
 }
 
 Searcher::Searcher
@@ -28,12 +23,20 @@ Searcher::~Searcher()
 {
 }
 
+boost::signals2::connection Searcher::connectSearchDone
+    (
+    SigSearchDone::slot_type searchDoneSlot
+    )
+{
+    return mSearchDoneSignal->connect( searchDoneSlot );
+}
+
 void Searcher::reportSearchDone
     (
     const ObjectList results
     )
 {
-    (*mSearchDoneSignal)( results );
+    (*mSearchDoneSignal)( *this, results );
 }
 
 } // namespace Flurry

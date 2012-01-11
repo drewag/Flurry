@@ -21,6 +21,8 @@ class ModuleManager;
 class ObjectList;
 class Object; class Action;
 class Selector;
+class Searcher;
+class Action;
 class Category;
 class Dialog;
 class DialogEvent;
@@ -95,28 +97,8 @@ class Dialog
         //! Signal that results have been generated
         void reportResultsGenerated
             (
-            ObjectList results
-            );
-
-        //! Search for an object matching text
-        //!
-        //! Report results through reportResultsGenerated
-        void findInCategoriesWithSelector
-            (
-            std::string text,             //!< Text to search with
-            const Selector &sel,          //!< Selector to filter objects with
-            const ObjectList &categories  //!< Categories to search within
-            );
-
-        //! Search for selectors that support
-        //! the given category
-        //!
-        //! Report results through reportResultsGenerated
-        void findInSelectorsWithCategories
-            (
-            std::string text,               //!< Text to match agains the name of the selector
-            const ObjectList &categories,   //!< Categories to make sure is supported
-            const ObjectList &selectors     //!< Selectors to search within
+            const Searcher &searcher,   //!< Searcher that has finished
+            const ObjectList results    //!< Results found by searcher
             );
 
     private:
@@ -131,8 +113,12 @@ class Dialog
 
         std::vector<boost::thread*> mSearcherThreads; //!< Background thread for searches
 
-        ObjectList* mSelectedObjects; //!< List of the currently selected objects that will serve
-                                      //!  as input to the next search
+        ObjectList* mInputObjects; //!< List of the currently selected objects that will serve as input to the next search
+
+        ObjectList* mPreviouslySelected; //!< The last objects to be selected that may need further clarification before becoming
+                                         //!  input to the action. e.g. A category can have a selector applied to create multiple inputs
+
+        ObjectList* mActiveActions; //!< Actions that is currently selected. All objects in mInputObjects will serve as input
 
         SynchronizedQueue<SharedEvent> mEventQueue; //!< Queue of events to be processed
 

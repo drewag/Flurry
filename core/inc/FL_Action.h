@@ -7,6 +7,8 @@ namespace Flurry
 {
 
 class ConcreteAction;
+class ObjectList;
+class Category;
 
 class Action : public Object
 {
@@ -25,7 +27,10 @@ class Action : public Object
 
         //! Destructor
         ~Action();
-        
+
+        //! Get the categories of input that this action needs
+        const ObjectList &getInputCategories();
+
         //! @returns The Action Category
         static Category actionCategory();
 

@@ -22,7 +22,6 @@ class SelectorSearcher : public Searcher
         //! Constructor
         SelectorSearcher
             (
-            SigSearchDone::slot_type searchDoneSlot, //!< slot to callback when the search is done
             const std::string &text,                 //!< text to match
             const ObjectList &categories,            //!< categories to search based on
             const ObjectList &selectors              //!< selectors to search

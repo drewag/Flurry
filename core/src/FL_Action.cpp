@@ -34,6 +34,11 @@ Action::~Action()
 {
 }
 
+const ObjectList &Action::getInputCategories()
+{
+    return ((ConcreteAction*)mConcrete)->getInputCategories();
+}
+
 /* static */ Category Action::actionCategory()
 {
     static Category category( "Action", true );

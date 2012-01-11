@@ -1,15 +1,23 @@
 #include "FL_Dialog.h"
 
-#include "FL_ObjectList.h"
-#include "FL_ModuleManager.h"
+// Data Classes
 #include "FL_Object.h"
 #include "FL_Category.h"
 #include "FL_Selector.h"
+#include "FL_Action.h"
+#include "FL_ObjectList.h"
+
+// Modules
+#include "FL_ModuleManager.h"
 #include "FL_CoreModule.h"
+
+// Searcher
 #include "FL_Searcher.h"
+#include "FL_MultiSearcher.h"
 #include "FL_ObjectSearcher.h"
 #include "FL_SelectorSearcher.h"
-#include "FL_ObjectList.h"
+
+// Events
 #include "FL_DialogResultsGeneratedEvent.h"
 
 #include <boost/thread.hpp>
@@ -26,13 +34,17 @@ Dialog::Dialog
     , mResultsGeneratedEmitter( this )
     , mActionBegunEmitter( this )
     , mActionFinishedEmitter( this )
-    , mSelectedObjects( NULL )
+    , mInputObjects( NULL )
+    , mPreviouslySelected( NULL )
+    , mActiveActions( NULL )
 {
 }
 
 Dialog::~Dialog()
 {
-    delete mSelectedObjects;
+    delete mPreviouslySelected;
+    delete mActiveActions;
+    delete mInputObjects;
     for( unsigned int i = 0; i < mSearcherThreads.size(); i++ )
     {
         delete mSearcherThreads[i];
@@ -53,26 +65,48 @@ void Dialog::textChanged
     std::string newText
     )
 {
-    if( NULL == mSelectedObjects )
+    MultiSearcher* searcher = new MultiSearcher();
+    searcher->connectSearchDone( boost::bind( &Dialog::reportResultsGenerated, this, _1, _2 ) );
+
+    bool selectedObjectsAreCategories = NULL != mPreviouslySelected
+        && mPreviouslySelected->allObjectsAreOfCategory( Category::categoryCategory() );
+
+    // Selectors appear in search if and only if all active objects are Categories
+    if( NULL != mPreviouslySelected && selectedObjectsAreCategories )
     {
-        // On the first search look for an object in any category
-        this->findInCategoriesWithSelector
+        searcher->addSearcher( new SelectorSearcher
             (
             newText,
-            CoreModule::namedSelector(),
-            mModuleManager->getAllCategories()
-            );
-    }
-    else if( mSelectedObjects->allObjectsAreOfCategory( Category::categoryCategory() ) )
-    {
-        // If everything is a category then we can find an Action or Selector
-        this->findInSelectorsWithCategories
-            (
-            newText,
-            *mSelectedObjects,
+            *mPreviouslySelected,
             mModuleManager->getAllSelectors()
-            ); 
+            ) );
     }
+
+    if( NULL == mActiveActions )
+    {
+        // We are preparing input for a future action
+        // Actions appear in search if and only if no active Actions are selected
+        // TODO: Add action to search
+
+        if( !selectedObjectsAreCategories )
+        {
+            // Objects appear in search if and only if there is no active Category
+            // Categories appear in search if and only if there is no active Category
+            searcher->addSearcher( new ObjectSearcher
+                (
+                newText,
+                CoreModule::namedSelector(),
+                mModuleManager->getAllCategories()
+                ) );
+        }
+    }
+    else
+    {
+        // We have an action and we are just satisfying all of the required input
+        // TODO: Add searches to satisfy requirments
+    }
+
+    boost::thread thread( *searcher );
 }
 
 void Dialog::resultSelected
@@ -80,15 +114,36 @@ void Dialog::resultSelected
     const Object &res
     )
 {
-    if( NULL == mSelectedObjects )
+    if( NULL == mPreviouslySelected )
     {
-        mSelectedObjects = new ObjectList();
+        mPreviouslySelected = new ObjectList();
     }
     else
     {
-        mSelectedObjects->clear();
+        mPreviouslySelected->clear();
     }
-    mSelectedObjects->add( res );
+    mPreviouslySelected->add( res );
+
+    if( res.isOfCategory( Action::actionCategory() ) )
+    {
+        if( NULL == mActiveActions )
+        {
+            mActiveActions = new ObjectList();
+        }
+        else
+        {
+            mActiveActions->clear();
+        }
+        mActiveActions->add( res );
+    }
+    else
+    {
+        if( NULL == mInputObjects )
+        {
+            mInputObjects = new ObjectList();
+        }
+        mInputObjects->add( res );
+    }
 }
 
 void Dialog::batchResultSelected
@@ -124,45 +179,12 @@ boost::signals2::connection Dialog::connectToActionFinished
 
 void Dialog::reportResultsGenerated
     (
-    ObjectList results
+    const Searcher &,
+    const ObjectList results
     )
 {
     SharedEvent event( mResultsGeneratedEmitter.newEvent( results ) );
     mEventQueue.push( event );
-}
-
-void Dialog::findInCategoriesWithSelector
-    (
-    std::string text,
-    const Selector &sel,
-    const ObjectList &categories
-    )
-{
-    ObjectSearcher searcher
-        (
-        boost::bind( &Dialog::reportResultsGenerated, this, _1 ),
-        text,
-        sel,
-        categories
-        );
-    boost::thread newThread( searcher );
-}
-
-void Dialog::findInSelectorsWithCategories
-    (
-    std::string text,
-    const ObjectList &categories,
-    const ObjectList &selectors
-    )
-{
-    SelectorSearcher searcher
-        (
-        boost::bind( &Dialog::reportResultsGenerated, this, _1 ),
-        text,
-        categories,
-        selectors
-        );
-    boost::thread newThread( searcher );
 }
 
 } // namespace Flurry
