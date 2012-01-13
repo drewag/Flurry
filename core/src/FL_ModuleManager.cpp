@@ -26,7 +26,7 @@ ModuleManager::ModuleManager()
     , mCoreModule( NULL )
 {
     mCoreModule = new CoreModule();
-    mCoreModule->setName( "FlurryCore" );
+    mModules[mCoreModule->getName()] = mCoreModule;
     this->loadModule( mCoreModule );
 }
 
@@ -50,7 +50,7 @@ bool ModuleManager::refresh()
     return true;
 }
 
-bool ModuleManager::registerModule
+ModuleManager::ModuleLoadStatus ModuleManager::registerModule
     (
     std::string name
     )
@@ -61,34 +61,20 @@ bool ModuleManager::registerModule
     if( mModules.end() != itr )
     {
         std::cerr << "Module " << name << " already loaded." << std::endl;
-        return false;
+        return ModuleManager::MODULE_LOAD_STATUS_ALREADY_LOADED;
     }
 
-    std::string filePath = "modules/" + name + ".so";
-
-    void* lib = dlopen( filePath.c_str(), RTLD_NOW );
-    if( NULL == lib )
+    Module* module = new Module( name );
+    ModuleLoadStatus status = module->load();
+    if( MODULE_LOAD_STATUS_SUCCESSFUL == status )
     {
-        std::cerr << dlerror() << std::endl;
-        return false;
+        mModules[name] = module;
+        this->loadModule( module );
+
+        std::cout << "done." << std::endl;
     }
 
-    ModuleMaker create = (ModuleMaker)dlsym( lib, "create" );
-    if( NULL == create )
-    {
-        std::cerr << dlerror() << std::endl;
-        return false;
-    }
-
-    Module* module = create();
-    module->setLibHndl( lib );
-    module->setName( name );
-
-    this->loadModule( module );
-
-    std::cout << "done." << std::endl;
-
-    return true;
+    return status;
 }
 
 bool ModuleManager::unregisterModule
@@ -96,6 +82,8 @@ bool ModuleManager::unregisterModule
     std::string name
     )
 {
+    std::cout << "Unloading Module " << name <<  "...";
+
     ModuleMap::iterator itr = mModules.find( name );
     if( mModules.end() == itr )
     {
@@ -106,6 +94,8 @@ bool ModuleManager::unregisterModule
     Module* module = itr->second;
     this->unloadModule( module );
     mModules.erase( itr );
+
+    std::cout << "done." << std::endl;
 
     return true;
 }
@@ -129,7 +119,8 @@ bool ModuleManager::loadModule
     Module* module
     )
 {
-    mModules[module->getName()] = module;
+    module->load();
+
     mCategoryManager->refreshModule( *module );
     mSelectorManager->refreshModule( *module );
     mActionManager->refreshModule( *module );
@@ -142,28 +133,11 @@ bool ModuleManager::unloadModule
     Module* module
     )
 {
-    std::cout << "Unloading Module " << module->getName() <<  "...";
-
     mCategoryManager->unloadModule( *module );
     mSelectorManager->unloadModule( *module );
     mActionManager->unloadModule( *module );
 
-    void* lib = module->getLibHndl();
-    if( NULL != lib )
-    {
-        ModuleDestroyer destroy = (ModuleDestroyer)dlsym( lib, "destroy" );
-        if( NULL == destroy )
-        {
-            std::cerr << dlerror() << std::endl;
-            return false;
-        }
-        destroy( module );
-        module = NULL;
-
-        dlclose( lib );
-    }
-
-    std::cout << "done." << std::endl;
+    module->unload();
 
     return true;
 }

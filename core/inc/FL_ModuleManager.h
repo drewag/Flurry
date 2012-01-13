@@ -19,6 +19,16 @@ class Selector;
 class ModuleManager
 {
     public:
+        enum ModuleLoadStatus
+        {
+            MODULE_LOAD_STATUS_SUCCESSFUL,
+            MODULE_LOAD_STATUS_FAILED,
+            MODULE_LOAD_STATUS_ALREADY_LOADED,
+            MODULE_LOAD_STATUS_NOT_FOUND,
+            MODULE_LOAD_STATUS_MISSING_FUNCTION
+        };
+
+    public:
         //! Constructor
         ModuleManager();
 
@@ -33,7 +43,7 @@ class ModuleManager
         //! Register a module
         //!
         //! Load the library and module instance
-        bool registerModule
+        ModuleLoadStatus registerModule
             (
             std::string name //!< name of the module to register
             );

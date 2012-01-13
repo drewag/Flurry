@@ -15,7 +15,11 @@ Category::Category
     bool objectsAreSearchable
     )
 {
-    mConcrete = new ConcreteCategory( title, objectsAreSearchable );
+    mConcrete = new ConcreteCategory
+        (
+        title,
+        objectsAreSearchable
+        );
 }
 
 Category::Category
@@ -53,15 +57,6 @@ void Category::addObjects
     )
 {
     ((ConcreteCategory*)mConcrete)->addObjects( list );
-
-    ObjectList::iterator itr;
-    itr = list.begin();
-    while( list.end() != itr )
-    {
-        Object obj = *itr;
-        obj.addCategory( *this );
-        itr++;
-    }
 }
 
 void Category::removeObjects
@@ -70,15 +65,6 @@ void Category::removeObjects
     )
 {
     ((ConcreteCategory*)mConcrete)->removeObjects( list );
-    
-    ObjectList::iterator itr;
-    itr = list.begin();
-    while( list.end() != itr )
-    {
-        Object obj = *itr;
-        obj.removeCategory( *this );
-        itr++;
-    }
 }
 
 const ObjectList Category::filterWithSelector
@@ -96,7 +82,6 @@ void Category::addObject
     )
 {
     ((ConcreteCategory*)mConcrete)->addObject( obj );
-    obj.addCategory( *this );
 }
 
 } // namespace Flurry

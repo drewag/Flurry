@@ -18,6 +18,12 @@ class CoreModule : public Module
         //! Destructor
         virtual ~CoreModule();
 
+        //! Load this module into memory
+        virtual ModuleManager::ModuleLoadStatus load();
+
+        //! Unload this module from memory
+        virtual void unload();
+
         //! @returns a fresh list of categories for this module
         virtual const ObjectList &refreshCategories();
 
@@ -29,12 +35,13 @@ class CoreModule : public Module
 
         static Selector &namedSelector();
 
-    private:
-        ObjectList* mCategoryList; //! Current list of categories
-
-        ObjectList* mActionList; //! Current list of actions
-
-        ObjectList* mSelectorList; //! Current list of selectors
+        //! @return true if the given object title and category title match with the given text
+        static bool namedSelectorDoesObjectMatch
+            (
+            const char* text,            //!< text to match with
+            const char* objTitle,        //!< title of obj to match
+            const char* objCategoryTitle //!< title of category of obj to match
+            );
 
 }; // class CoreModule
 

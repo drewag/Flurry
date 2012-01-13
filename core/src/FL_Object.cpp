@@ -16,10 +16,12 @@ Object::Object()
 
 Object::Object
     (
-    std::string title
+    std::string title,
+    Category cat
     )
 {
-    mConcrete = new ConcreteObject( title );
+    mConcrete = new ConcreteObject( title, cat );
+    cat.addObject( *this );
 }
 
 Object::Object
@@ -77,20 +79,9 @@ const std::string &Object::getTitle() const
     return mConcrete->getTitle();
 }
 
-void Object::addCategory
-    (
-    const Category &cat
-    )
+Category Object::getCategory() const
 {
-    return mConcrete->addCategory( cat );
-}
-
-void Object::removeCategory
-    (
-    const Category &cat
-    )
-{
-    return mConcrete->removeCategory( cat );
+    return mConcrete->getCategory();
 }
 
 } // namespace Flurry

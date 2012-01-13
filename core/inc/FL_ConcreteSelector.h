@@ -2,12 +2,14 @@
 #define FL_ConcreteSelector
 
 #include "FL_ConcreteObject.h"
+#include "FL_Mod_Selector.h"
 #include <string>
 
 namespace Flurry
 {
 
 class Object;
+class ObjectList;
 
 class ConcreteSelector : public ConcreteObject
 {
@@ -15,7 +17,9 @@ class ConcreteSelector : public ConcreteObject
         //! Constructor
         ConcreteSelector
             (
-            std::string title
+            std::string title,
+            MatchObjectFunc func,
+            const ObjectList &supportedCategories
             );
 
         //! Destructor
@@ -23,20 +27,25 @@ class ConcreteSelector : public ConcreteObject
 
         //! Delete this object. Subclasses must override this to
         //! delete the pointer with a proper pointer type
-        virtual void destroy() = 0;
+        virtual void destroy();
 
         //! @return true if selector matches the given object
-        virtual bool doesObjectMatch
+        bool doesObjectMatch
             (
             std::string text,  //!< text to match with
             const Object &obj  //!< Object to check if it matches
-            ) const = 0;
+            ) const;
 
         //! @return true if selector supports the given category
-        virtual bool doesSupportCategory
+        bool doesSupportCategory
             (
             const Category &cat  //!< Object to check if it matches
-            ) const = 0;
+            ) const;
+
+    private:
+        MatchObjectFunc mMatchObjectFunc; //! Function to call to match object
+
+        ObjectList* mCategories; //!< List of supported categories
 
 }; // class ConcreteSelector
 

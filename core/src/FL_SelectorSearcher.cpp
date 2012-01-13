@@ -37,6 +37,9 @@ SelectorSearcher::~SelectorSearcher()
 
 /* virtual */ void SelectorSearcher::operator()()
 {
+    #ifdef SEARCHER_DEBUG
+        std::cout << "Selector Searcher Start" << std::endl;
+    #endif
     ObjectList res;
 
     ObjectList::const_iterator selItr;
@@ -51,6 +54,9 @@ SelectorSearcher::~SelectorSearcher()
             while( mCategories.end() != catItr )
             {
                 Category cat = *catItr;
+                #ifdef SEARCHER_DEBUG
+                    std::cout << "Checking: " << sel.getTitle() << std::endl;
+                #endif
                 if( !sel.doesSupportCategory( cat ) )
                 {
                     break;
@@ -66,6 +72,9 @@ SelectorSearcher::~SelectorSearcher()
         selItr++;
     }
 
+    #ifdef SEARCHER_DEBUG
+        std::cout << "Selector Searcher Done" << std::endl;
+    #endif
     reportSearchDone( res );
 }
 

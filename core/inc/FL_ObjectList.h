@@ -58,6 +58,12 @@ class ObjectList
             const Category& cat //!< Category to check for
             );
 
+        //! @return true if the given object is within this list
+        bool containsObject
+            (
+            Object obj  //!< Object to test if it is within this list
+            );
+
         //! @returns the number of Objects in list
         unsigned int size() const;
 

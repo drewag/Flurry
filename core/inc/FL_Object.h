@@ -23,7 +23,8 @@ class Object
         //! Constructor
         Object
             (
-            std::string title
+            std::string title,  //!< Display title of the new object
+            Category cat        //!< Category this object is in
             );
 
         //! Destructor
@@ -61,20 +62,11 @@ class Object
             const Category &cat //!< Category to test against
             ) const;
 
-        //! Make this object part of the given category
-        void addCategory
-            (
-            const Category &cat //!< Category to add as a parent of this object
-            );
-
-        //! Make this object no longer part of the given category
-        void removeCategory
-            (
-            const Category &cat //!< Category to remove as a parent of this object
-            );
-
         //! @return the title of this Object
         const std::string &getTitle() const;
+
+        //! @return the category of this object
+        Category getCategory() const;
 
     protected:
         //! Constructor for subclasses where mConcrete is not set

@@ -9,11 +9,12 @@ namespace Flurry
 
 Selector::Selector
     (
-    ConcreteSelector* sel
+    std::string title,
+    MatchObjectFunc func,
+    const ObjectList &categories
     )
 {
-    mConcrete = sel;
-    mConcrete->retain();
+    mConcrete = new ConcreteSelector( title, func, categories );
 }
 
 Selector::Selector

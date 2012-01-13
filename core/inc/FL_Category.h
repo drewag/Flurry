@@ -3,6 +3,7 @@
 #ifndef FL_Category
 #define FL_Category
 
+#include "FL_Mod_Category.h"
 #include <string>
 
 namespace Flurry
@@ -20,6 +21,12 @@ class Category : public Object
             std::string title,               //!< Display title of this category
             bool objectsAreSearchable = true //!< If objects in this category should
                                              //!  show up in object searches
+            );
+
+        //! Constructor
+        Category
+            (
+            Mod_Category* cat   //!< C category object to create this new category from
             );
 
         //! Conversion constructor from Object
@@ -64,6 +71,8 @@ class Category : public Object
             );
 
     private:
+        //! Disabled empty constructor
+        Category();
 
 }; // class Category
 

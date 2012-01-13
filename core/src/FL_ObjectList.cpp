@@ -80,6 +80,16 @@ bool ObjectList::allObjectsAreOfCategory
     return true;
 }
 
+bool ObjectList::containsObject
+    (
+    Object obj
+    )
+{
+    ObjectList::const_iterator itr;
+    itr = mObjects->find( obj );
+    return mObjects->end() == itr;
+}
+
 ObjectList::iterator ObjectList::begin()
 {
     return mObjects->begin();

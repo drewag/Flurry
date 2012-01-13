@@ -15,10 +15,11 @@ static unsigned long long createCount = 0;
 
 ConcreteObject::ConcreteObject
     (
-    std::string title
+    std::string title,
+    Category cat
     )
     : mRetainCount( 1 )
-    , mCategories( NULL )
+    , mCategory( new Category( cat ) )
     , mTitle( title )
 {
 #ifdef DEBUG_OBJECT_LIFECYCLE
@@ -26,13 +27,29 @@ ConcreteObject::ConcreteObject
     mId = createCount;
     std::cout << "Created: " << mId << std::endl;
 #endif
-    mCategories = new ObjectList();
+}
+
+ConcreteObject::ConcreteObject
+    (
+    std::string title
+    )
+    : mRetainCount( 1 )
+    , mCategory( NULL )
+    , mTitle( title )
+{
+#ifdef DEBUG_OBJECT_LIFECYCLE
+    createCount++;
+    mId = createCount;
+    std::cout << "Created: " << mId << std::endl;
+#endif
 }
 
 ConcreteObject::~ConcreteObject()
 {
+#ifdef DEBUG_OBJECT_LIFECYCLE
     std::cout << "Destroying " << mTitle << std::endl;
-    delete mCategories;
+#endif
+    delete mCategory;
 }
 
 void ConcreteObject::retain()
@@ -68,17 +85,11 @@ bool ConcreteObject::isOfCategory
     const Category &cat //!< Category to test against
     ) const
 {
-    ObjectList::const_iterator itr;
-    itr = mCategories->begin();
-    while( mCategories->end() != itr )
+    if( NULL == mCategory )
     {
-        if( *itr == cat )
-        {
-            return true;
-        }
-        itr++;
+        return cat == Category::categoryCategory();
     }
-    return false;
+    return *mCategory == cat;
 }
 
 const std::string &ConcreteObject::getTitle()
@@ -86,20 +97,13 @@ const std::string &ConcreteObject::getTitle()
     return mTitle;
 }
 
-void ConcreteObject::addCategory
-    (
-    const Category &cat
-    )
+Category ConcreteObject::getCategory() const
 {
-    mCategories->add( cat );
-}
-
-void ConcreteObject::removeCategory
-    (
-    const Category &cat
-    )
-{
-    mCategories->remove( cat );
+    if( NULL == mCategory )
+    {
+        return Category::categoryCategory();
+    }
+    return *mCategory;
 }
 
 } // namespace Flurry

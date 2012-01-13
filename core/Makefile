@@ -3,6 +3,8 @@ OUT := flurry_core.a
 BUILD_DIRECTORY := out
 CC := g++
 CFLAGS := -c -Wall -g -fPIC
+# Add this to C Flags to show debug output on console for searchers
+#-DSEARCHER_DEBUG=true
 
 INCLUDE := -I./inc -I./packages/boost
 SRC_DIR := src

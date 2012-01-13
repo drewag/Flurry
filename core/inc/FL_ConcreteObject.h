@@ -1,8 +1,8 @@
 #ifndef FL_ConcreteObject
 #define FL_ConcreteObject
 
+#include "FL_Mod_Object.h"
 #include <string>
-
 
 namespace Flurry
 {
@@ -16,7 +16,8 @@ class ConcreteObject
         //! Constructor
         ConcreteObject
             (
-            std::string title //! Display title of the new object
+            std::string title, //!< Display title of the new object
+            Category cat       //!< Category this object is in
             );
 
         //! Take ownership of this Object
@@ -38,19 +39,20 @@ class ConcreteObject
         //! delete the pointer with a proper pointer type
         virtual void destroy();
 
-        //! Make this object part of the given category
-        void addCategory
-            (
-            const Category &cat //!< Category to add as a parent of this object
-            );
-
-        //! Make this object no longer part of the given category
-        void removeCategory
-            (
-            const Category &cat //!< Category to remove as a parent of this object
-            );
+        //! @return the category of this object
+        Category getCategory() const;
 
     protected:
+        //! Constructor for object that has NULL for category indicating
+        //! that it is a Category object.
+        //!
+        //! Note: this is needed to prevent circular creation when creating
+        //! the object for the Category category.
+        ConcreteObject
+            (
+            std::string title //!< Display title of the new object
+            );
+
         //! No other objects can destroy this
         ~ConcreteObject();
 
@@ -61,7 +63,7 @@ class ConcreteObject
     private:
         unsigned long mRetainCount; //!< Number of objects that own this
 
-        ObjectList* mCategories; //!< Categories that this object belongs to
+        Category* mCategory; //!< Categories that this object belongs to
 
         std::string mTitle; //! Display title of this object
 

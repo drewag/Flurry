@@ -2,6 +2,7 @@
 
 #include "FL_ObjectList.h"
 #include "FL_Selector.h"
+#include "FL_Category.h"
 
 #include <set>
 #include <iostream>
@@ -15,10 +16,9 @@ ConcreteCategory::ConcreteCategory
     bool objectsAreSearchable
     )
     : ConcreteObject( title )
-    , mObjects( NULL )
+    , mObjects( new ObjectList() )
     , mObjectsAreSearchable( objectsAreSearchable )
 {
-    mObjects = new ObjectList();
 }
 
 /* virtual */ void ConcreteCategory::destroy()

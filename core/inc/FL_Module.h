@@ -2,6 +2,7 @@
 #define FL_Module
 
 #include <string>
+#include "FL_ModuleManager.h"
 
 namespace Flurry
 {
@@ -10,54 +11,52 @@ class ObjectList;
 
 class Module
 {
-    friend class ModuleManager;
-
     public:
         //! Constructor
-        Module();
+        Module
+            (
+            std::string name    //!< The name of the module to load
+            );
 
         //! Destructor
         virtual ~Module();
 
+        //! Load this module into memory
+        virtual ModuleManager::ModuleLoadStatus load();
+
+        //! Unload this module from memory
+        virtual void unload();
+
         //! @returns a fresh list of categories for this module
-        virtual const ObjectList &refreshCategories() = 0;
+        virtual const ObjectList &refreshCategories();
 
         //! @returns a fresh list of actions for this module
-        virtual const ObjectList &refreshActions() = 0;
+        virtual const ObjectList &refreshActions();
 
         //! @returns a fresh list of selectors for this module
-        virtual const ObjectList &refreshSelectors() = 0;
-
-        //! Set the handle of the dynamic library that this instance
-        //! is within
-        void setLibHndl( void* hndl );
-
-        //! @return the handle of the dynamic library that this
-        //! instance is within
-        void* getLibHndl();
+        virtual const ObjectList &refreshSelectors();
 
         //! @return the name of this module
         std::string getName() const;
 
     protected:
-        //! Set the name of this module
-        void setName
-            (
-            std::string name
-            );
+        //! Constructor for subclasses that don't use a dll
+        Module();
+
+    protected:
+        ObjectList* mCategories; //!< List of categoires in this module
+
+        ObjectList* mActions; //!< List of categoires in this module
+
+        ObjectList* mSelectors; //!< List of categoires in this module
+
+        std::string mName; //!< The name of this module
 
     private:
         void* mLibHndl; //!< Handle of the dynamic library that
                         //!  this instance is within
 
-        std::string mName; //!< The name of this module
 };
-
-//! Factory create function
-typedef Module* (*ModuleMaker)();
-
-//! Factory destroy function
-typedef void (*ModuleDestroyer)( Module* );
 
 } // namespace Flurry
 

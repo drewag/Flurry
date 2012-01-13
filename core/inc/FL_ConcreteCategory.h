@@ -2,6 +2,7 @@
 #define FL_ConcreteCategory
 
 #include "FL_ConcreteObject.h"
+#include "FL_Mod_Category.h"
 #include <string>
 
 namespace Flurry
@@ -10,9 +11,12 @@ namespace Flurry
 class Selector;
 class ObjectList;
 class Object;
+class Category;
 
 class ConcreteCategory : public ConcreteObject
 {
+    friend class Category;
+
     public:
         //! Constructor
         ConcreteCategory

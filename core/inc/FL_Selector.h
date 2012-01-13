@@ -2,6 +2,8 @@
 #define FL_Selector
 
 #include "FL_Object.h"
+#include "FL_ObjectList.h"
+#include "FL_Mod_Selector.h"
 
 namespace Flurry
 {
@@ -15,7 +17,9 @@ class Selector : public Object
         //! Constructor
         Selector
             (
-            ConcreteSelector* sel   //!< Concrete Selector to use
+            std::string title,                             //!< Display title of this selector
+            MatchObjectFunc func,                          //!< Function to check if objects matches selector
+            const ObjectList &categories = ObjectList()    //!< List of categories that this selector supports
             );
 
         //! Conversion constructor from Object

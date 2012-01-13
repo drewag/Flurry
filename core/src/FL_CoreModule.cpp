@@ -7,65 +7,92 @@
 #include "FL_Category.h"
 #include "FL_Selector.h"
 #include "FL_Action.h"
-#include "FL_NamedConcreteSelector.h"
 
 namespace Flurry
 {
 
 CoreModule::CoreModule()
-    : mCategoryList( NULL )
-    , mActionList( NULL )
-    , mSelectorList( NULL )
+{
+    mName = "FlurryCore";
+}
+
+/* virtual */ ModuleManager::ModuleLoadStatus CoreModule::load()
 {
     // Setup Categories
-    mCategoryList = new ObjectList();
-    mCategoryList->add( Category::categoryCategory() );
-    mCategoryList->add( Action::actionCategory() );
-    mCategoryList->add( Selector::selectorCategory() );
+    mCategories->add( Category::categoryCategory() );
+    mCategories->add( Action::actionCategory() );
+    mCategories->add( Selector::selectorCategory() );
 
     // Setup Actions
-    mActionList = new ObjectList();
 
     // Setup Selectors
-    mSelectorList = new ObjectList();
-    mSelectorList->add( CoreModule::namedSelector() );
+    mSelectors->add( CoreModule::namedSelector() );
+
+    return ModuleManager::MODULE_LOAD_STATUS_SUCCESSFUL;
+}
+
+//! Unload this module from memory
+/* virtual */ void CoreModule::unload()
+{
+}
+
+/* static */ bool CoreModule::namedSelectorDoesObjectMatch
+    (
+    const char* text,
+    const char* objTitle,
+    const char*
+    )
+{
+    std::string searchText( text );
+    std::string title( objTitle );
+
+    std::string::const_iterator textItr;
+    textItr = searchText.begin();
+
+    std::string::const_iterator titleItr;
+    titleItr = title.begin();
+
+    while( textItr != searchText.end()
+           && titleItr != title.end() )
+    {
+        if( tolower( *textItr ) == tolower( *titleItr ) )
+        {
+            textItr++;
+            titleItr++;
+        }
+        else
+        {
+            titleItr++;
+        }
+    }
+
+    return textItr == searchText.end();
 }
 
 /* static */ Selector &CoreModule::namedSelector()
 {
-    static Selector* named = NULL;
+    static Selector named( "named", &CoreModule::namedSelectorDoesObjectMatch );
     
-    if( NULL == named )
-    {
-        NamedConcreteSelector* concreteNamed = new NamedConcreteSelector();
-        named = new Selector( concreteNamed );
-        concreteNamed->release();
-        concreteNamed = NULL;
-    }
-
-    return *named;
+    return named;
 }
 
 /* virtual */ CoreModule::~CoreModule()
 {
-    delete mCategoryList;
-    delete mActionList;
-    delete mSelectorList;
 }
 
 /* virtual */ const ObjectList &CoreModule::refreshCategories()
 {
-    return *mCategoryList;
+    return *mCategories;
 }
 
 /* virtual */ const ObjectList &CoreModule::refreshActions()
 {
-    return *mActionList;
+    return *mActions;
 }
 
 /* virtual */ const ObjectList &CoreModule::refreshSelectors()
 {
-    return *mSelectorList;
+    return *mSelectors;
 }
 
 } // namespace Flurry

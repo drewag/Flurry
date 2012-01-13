@@ -22,6 +22,7 @@
 
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
+#include <iostream>
 
 namespace Flurry
 {
@@ -106,7 +107,7 @@ void Dialog::textChanged
         // TODO: Add searches to satisfy requirments
     }
 
-    boost::thread thread( *searcher );
+    boost::thread thread( boost::ref( *searcher ) );
 }
 
 void Dialog::resultSelected
@@ -179,10 +180,12 @@ boost::signals2::connection Dialog::connectToActionFinished
 
 void Dialog::reportResultsGenerated
     (
-    const Searcher &,
+    const Searcher &searcher,
     const ObjectList results
     )
 {
+    delete &searcher;
+    std::cout << "Generated" << std::endl;
     SharedEvent event( mResultsGeneratedEmitter.newEvent( results ) );
     mEventQueue.push( event );
 }
