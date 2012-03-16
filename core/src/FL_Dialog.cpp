@@ -185,7 +185,9 @@ void Dialog::reportResultsGenerated
     )
 {
     delete &searcher;
+#ifdef SEARCHER_DEBUG
     std::cout << "Generated" << std::endl;
+#endif
     SharedEvent event( mResultsGeneratedEmitter.newEvent( results ) );
     mEventQueue.push( event );
 }

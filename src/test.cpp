@@ -1,43 +1,37 @@
-#include "FL_ModuleManager.h"
-#include "FL_ObjectList.h"
-#include "FL_Dialog.h"
-#include "FL_Object.h"
-#include "FL_Category.h"
-#include "FL_Selector.h"
-#include "FL_Action.h"
-
-#include "FL_CategoryManager.h"
+#include "FL_Mod_ModuleManager.h"
+#include "FL_Mod_Dialog.h"
+#include "FL_Mod_Object.h"
+#include "FL_Mod_Category.h"
+#include "FL_Mod_Selector.h"
+#include "FL_Mod_Action.h"
 
 #include <iostream>
 #include <vector>
 
-void resultsGenerated( Flurry::Dialog &dialog, Flurry::ObjectList results );
-void actionBegun( Flurry::Dialog &dialog, const Flurry::Action &action );
-void actionFinished( Flurry::Dialog &dialog, const Flurry::Action &action );
-void askForText( Flurry::Dialog &dialog );
+void resultsGenerated( Mod_Dialog* dialog, const Mod_Object** results, unsigned int numResults );
+void actionBegun( Mod_Dialog* dialog, const Mod_Action *action );
+void actionFinished( Mod_Dialog* dialog, const Mod_Action *action );
+void askForText( Mod_Dialog* dialog );
 
 int main()
 {
-    Flurry::ModuleManager moduleManager;
+    Mod_ModuleManager* moduleManager = mod_module_manager_create();
 
-    moduleManager.registerModule( "operatingsystem" );
+    mod_module_manager_register_module( moduleManager, "operatingsystem" );
 
-    Flurry::Dialog dialog
-        (
-        moduleManager
-        );
+    Mod_Dialog* dialog = mod_dialog_create( moduleManager );
 
-    dialog.connectToResultsGenerated( &resultsGenerated );
-    dialog.connectToActionBegun( &actionBegun );
-    dialog.connectToActionFinished( &actionFinished );
+    mod_dialog_connect_results_generated( dialog, &resultsGenerated );
+    mod_dialog_connect_action_begun( dialog, &actionBegun );
+    mod_dialog_connect_action_finished( dialog, &actionFinished );
 
     askForText( dialog );
-    dialog.start();
+    mod_dialog_start( dialog );
 }
 
 void askForText
     (
-    Flurry::Dialog &dialog
+    Mod_Dialog* dialog
     )
 {
     std::cout << "Please enter a search term:" << std::endl;
@@ -45,40 +39,33 @@ void askForText
     std::string input;
     std::cin >> input;
 
-    dialog.textChanged( input );
+    mod_dialog_text_changed( dialog, input.c_str() );
 }
 
 void resultsGenerated
     (
-    Flurry::Dialog &dialog,
-    Flurry::ObjectList results
+    Mod_Dialog* dialog,
+    const Mod_Object** results,
+    unsigned int numResults
     )
 {
-    std::vector<Flurry::Object> resDisplay;
-
-    Flurry::ObjectList::const_iterator itr;
-    itr = results.begin();
-    unsigned int i = 0;
-    while( results.end() != itr )
+    for( unsigned int i = 0; i < numResults; i++ )
     {
-        i++;
-        std::cout << i << ".\t" << itr->getTitle() << std::endl;
-        resDisplay.push_back( *itr );
-        itr++;
+        std::cout << i + 1 << ".\t" << mod_object_get_title( results[i] ) << std::endl;
     }
-    if( results.size() > 0 )
+    if( numResults > 0 )
     {
         unsigned int idx = 0;
-        while( idx <= 0 || idx > results.size() )
+        while( idx <= 0 || idx > numResults )
         {
             std::cout << "Please enter a number to indicate which result to choose" << std::endl;
 
             std::string input;
             std::cin >> input;
-            
+
             idx = atoi( input.c_str() );
         }
-        dialog.resultSelected( resDisplay[idx-1] );
+        mod_dialog_result_selected( dialog, results[idx-1] );
     }
 
     askForText( dialog );
@@ -86,17 +73,17 @@ void resultsGenerated
 
 void actionBegun
     (
-    Flurry::Dialog &dialog,
-    const Flurry::Action &action
+    Mod_Dialog *dialog,
+    const Mod_Action *action
     )
 {
-    std::cout << action.getTitle() << " started...";
+    std::cout << mod_action_get_title( action ) << " started...";
 }
 
 void actionFinished
     (
-    Flurry::Dialog &dialog,
-    const Flurry::Action &action
+    Mod_Dialog *dialog,
+    const Mod_Action *action
     )
 {
     std::cout << "finished.\n";

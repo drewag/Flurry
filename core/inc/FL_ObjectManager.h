@@ -27,7 +27,7 @@ class ObjectManager
 
         //! @returns list of all objects managed by this manager
         ObjectList getAllObjects();
-        
+
     protected:
         //! Constructor
         ObjectManager();

@@ -16,8 +16,8 @@ class DialogActionBegunEventEmitter : public DialogEventEmitter
         //! Signal for when an action has begun performing
         typedef boost::signals2::signal<void
             (
-            Dialog &dialog,       //!< Dialog that began action
-            const Action &action  //!< Action that began
+            Dialog &,       //!< Dialog that began action
+            const Action &  //!< Action that began
             )> Signal;
 
     public:

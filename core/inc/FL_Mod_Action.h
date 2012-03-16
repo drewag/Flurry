@@ -10,6 +10,18 @@ extern "C" {
 
 typedef void Mod_Action;
 
+Mod_Action* mod_action_create();
+
+void mod_action_destroy
+    (
+    Mod_Action* action
+    );
+
+const char* mod_action_get_title
+    (
+    const Mod_Action* action
+    );
+
 #ifdef __cplusplus
 }
 #endif

@@ -16,6 +16,20 @@ Mod_Object* mod_object_create
     Mod_Object* category    //!< Category this object is in
     );
 
+//! Create an Object as a copy of passed in object
+//!
+//! Need to call destroy when done with the Object.
+Mod_Object* mod_object_copy
+    (
+    Mod_Object* object //!< Object to copy
+    );
+
+//! @return the title of the object
+const char* mod_object_get_title
+    (
+    const Mod_Object* object
+    );
+
 //! Destroy the given Object
 //!
 //! The pointer passed in will be set to NULL
